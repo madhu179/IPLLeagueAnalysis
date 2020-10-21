@@ -34,4 +34,11 @@ public class PlayerRuns {
 	@CsvBindByName(column = "6s", required = true)
 	public int sixes;
 	
+	public Double getAverage()
+	{
+		if(!average.equals("-"))
+		return Double.parseDouble(average);
+		return 0.0;
+	}
+	
 }
