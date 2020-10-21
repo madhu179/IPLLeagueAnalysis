@@ -13,7 +13,8 @@ import com.capgemini.csvbuilder.ICSVBuilder;
 
 public class IPLAnalyser {
 	
-	List<PlayerRuns> playerRunsList = null;
+	private List<PlayerRuns> playerRunsList = null;
+	private Comparator<PlayerRuns> censusComparator;
 
 	public void loadRunsData(String filePath) throws IPLAnalyserException {
 		try {
@@ -33,19 +34,18 @@ public class IPLAnalyser {
 	
 	public String getTopBattingAvg() throws IPLAnalyserException {
 		checkForData();
-		Comparator<PlayerRuns> censusComparator = Comparator.comparing(PlayerRuns::getAverage);
+		censusComparator = Comparator.comparing(PlayerRuns::getAverage);
         this.sortStateData(censusComparator);
         Collections.reverse(playerRunsList);		
         return playerRunsList.get(0).player;
 	}
 
 	public String getTopStrikeRate() throws IPLAnalyserException {
-		if (playerRunsList == null || playerRunsList.size() == 0) {
-            throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
-        }
-		double maxStrikeRate = playerRunsList.stream().map(s->s.strikeRate).max(Double::compare).get();
-		List<PlayerRuns> player = playerRunsList.stream().filter(s->s.strikeRate==maxStrikeRate).collect(Collectors.toList());
-		return player.get(0).player;
+		checkForData();
+		censusComparator = Comparator.comparing(s->s.strikeRate);
+        this.sortStateData(censusComparator);
+        Collections.reverse(playerRunsList);		
+        return playerRunsList.get(0).player;
 	}
 
 	public String getMaximum6sAnd4s() throws IPLAnalyserException {
