@@ -35,32 +35,30 @@ public class IPLAnalyser {
 	public String getTopBattingAvg() throws IPLAnalyserException {
 		checkForData();
 		censusComparator = Comparator.comparing(PlayerRuns::getAverage);
-        this.sortBatsmenData(censusComparator);
-        Collections.reverse(playerRunsList);		
-        return playerRunsList.get(0).player;
+		return getBatsmanName(censusComparator);
 	}
 
 	public String getTopStrikeRate() throws IPLAnalyserException {
 		checkForData();
 		censusComparator = Comparator.comparing(s->s.strikeRate);
-        this.sortBatsmenData(censusComparator);
-        Collections.reverse(playerRunsList);		
-        return playerRunsList.get(0).player;
+		return getBatsmanName(censusComparator);
 	}
 
 	public String getMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
 		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
-		this.sortBatsmenData(censusComparator);
-        Collections.reverse(playerRunsList);		
-        return playerRunsList.get(0).player;
+		return getBatsmanName(censusComparator);
 	}
 	
 	public String getBestStrickRateMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
 		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
 		censusComparator = censusComparator.thenComparing(s->s.strikeRate);
-        this.sortBatsmenData(censusComparator);
+        return getBatsmanName(censusComparator);
+	}
+	
+	private String getBatsmanName(Comparator<PlayerRuns> censusComparator2) {
+		this.sortBatsmenData(censusComparator);
         Collections.reverse(playerRunsList);		
         return playerRunsList.get(0).player;
 	}
