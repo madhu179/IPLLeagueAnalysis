@@ -51,6 +51,15 @@ public class IPLAnalyser {
 	public String getMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
 		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
+		this.sortStateData(censusComparator);
+        Collections.reverse(playerRunsList);		
+        return playerRunsList.get(0).player;
+	}
+	
+	public String getBestStrickRateMaximum6sAnd4s() throws IPLAnalyserException {
+		checkForData();
+		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
+		censusComparator = censusComparator.thenComparing(s->s.strikeRate);
         this.sortStateData(censusComparator);
         Collections.reverse(playerRunsList);		
         return playerRunsList.get(0).player;
