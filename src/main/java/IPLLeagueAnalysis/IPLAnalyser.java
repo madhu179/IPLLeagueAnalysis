@@ -14,7 +14,7 @@ import com.capgemini.csvbuilder.ICSVBuilder;
 public class IPLAnalyser {
 	
 	private List<PlayerRuns> playerRunsList = null;
-	private Comparator<PlayerRuns> censusComparator;
+	private Comparator<PlayerRuns> runsComparator;
 
 	public void loadRunsData(String filePath) throws IPLAnalyserException {
 		try {
@@ -34,36 +34,36 @@ public class IPLAnalyser {
 	
 	public String getTopBattingAvg() throws IPLAnalyserException {
 		checkForData();
-		censusComparator = Comparator.comparing(PlayerRuns::getAverage);
-		return getBatsmanName(censusComparator);
+		runsComparator = Comparator.comparing(PlayerRuns::getAverage);
+		return getBatsmanName();
 	}
 
 	public String getTopStrikeRate() throws IPLAnalyserException {
 		checkForData();
-		censusComparator = Comparator.comparing(s->s.strikeRate);
-		return getBatsmanName(censusComparator);
+		runsComparator = Comparator.comparing(s->s.strikeRate);
+		return getBatsmanName();
 	}
 
 	public String getMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
-		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
-		return getBatsmanName(censusComparator);
+		runsComparator = Comparator.comparing(s->s.sixes+s.fours);
+		return getBatsmanName();
 	}
 	
 	public String getBestStrickRateMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
-		censusComparator = Comparator.comparing(s->s.sixes+s.fours);
-		censusComparator = censusComparator.thenComparing(s->s.strikeRate);
-        return getBatsmanName(censusComparator);
+		runsComparator = Comparator.comparing(s->s.sixes+s.fours);
+		runsComparator = runsComparator.thenComparing(s->s.strikeRate);
+        return getBatsmanName();
 	}
 	
-	private String getBatsmanName(Comparator<PlayerRuns> censusComparator2) {
-		this.sortBatsmenData(censusComparator);
+	private String getBatsmanName() {
+		this.sortBatsmenData(runsComparator);
         Collections.reverse(playerRunsList);		
         return playerRunsList.get(0).player;
 	}
 	
-	public void checkForData() throws IPLAnalyserException
+	private void checkForData() throws IPLAnalyserException
 	{
 		if (playerRunsList == null || playerRunsList.size() == 0) {
             throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
