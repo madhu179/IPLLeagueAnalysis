@@ -30,14 +30,13 @@ public class IPLAnalyser {
 		}
 
 	}
-
+	
 	public String getTopBattingAvg() throws IPLAnalyserException {
-		if (playerRunsList == null || playerRunsList.size() == 0) {
-            throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
-        }
-		double max = playerRunsList.stream().filter(s->!s.average.equals("-")).map(s->Double.parseDouble(s.average)).max(Double::compare).get();
-		List<PlayerRuns> player = playerRunsList.stream().filter(s->s.average.equals(Double.toString(max))).collect(Collectors.toList());
-		return player.get(0).player;		
+		checkForData();
+		Comparator<PlayerRuns> censusComparator = Comparator.comparing(PlayerRuns::getAverage);
+        this.sortStateData(censusComparator);
+        Collections.reverse(playerRunsList);		
+        return playerRunsList.get(0).player;
 	}
 
 	public String getTopStrikeRate() throws IPLAnalyserException {
@@ -56,6 +55,27 @@ public class IPLAnalyser {
 		int maxSixesAndFours = playerRunsList.stream().map(s->s.sixes+s.fours).max(Integer::compare).get();
 		List<PlayerRuns> player = playerRunsList.stream().filter(s->s.sixes+s.fours==maxSixesAndFours).collect(Collectors.toList());
 		return player.get(0).player;
+	}
+	
+	public void checkForData() throws IPLAnalyserException
+	{
+		if (playerRunsList == null || playerRunsList.size() == 0) {
+            throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
+        }
+	}
+	
+	private void sortStateData(Comparator<PlayerRuns> comparator)
+	{
+		 for (int i = 0; i < playerRunsList.size() - 1; i++) {
+	            for (int j = 0; j < playerRunsList.size() - i - 1; j++) {
+	            	PlayerRuns census1 = playerRunsList.get(j);
+	            	PlayerRuns census2 = playerRunsList.get(j + 1);
+	                if (comparator.compare(census1, census2) > 0) {
+	                	playerRunsList.set(j, census2);
+	                	playerRunsList.set(j + 1, census1);
+	                }
+	            }
+	        }
 	}
 	
 
