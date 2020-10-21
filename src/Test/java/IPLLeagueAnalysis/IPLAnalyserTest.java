@@ -26,5 +26,16 @@ public class IPLAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenCsvDataShouldReturnTopStrikeRatePlayer() {
+		try {
+			iplAnalyser.loadRunsData(PLAYER_RUNS_DATA);
+			String playerName = iplAnalyser.getTopStrikeRate();
+			assertEquals("Ishant Sharma", playerName);
+		} catch (IPLAnalyserException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
