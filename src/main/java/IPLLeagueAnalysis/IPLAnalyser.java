@@ -48,6 +48,15 @@ public class IPLAnalyser {
 		List<PlayerRuns> player = playerRunsList.stream().filter(s->s.strikeRate==maxStrikeRate).collect(Collectors.toList());
 		return player.get(0).player;
 	}
+
+	public String getMaximum6sAnd4s() throws IPLAnalyserException {
+		if (playerRunsList == null || playerRunsList.size() == 0) {
+            throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
+        }
+		int maxSixesAndFours = playerRunsList.stream().map(s->s.sixes+s.fours).max(Integer::compare).get();
+		List<PlayerRuns> player = playerRunsList.stream().filter(s->s.sixes+s.fours==maxSixesAndFours).collect(Collectors.toList());
+		return player.get(0).player;
+	}
 	
 
 }
