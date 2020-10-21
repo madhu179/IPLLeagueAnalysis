@@ -5,26 +5,26 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.Assert;
-
 public class IPLAnalyserTest {
-	
+
 	private final String PLAYER_RUNS_DATA = "C:\\Users\\MADHUBABU\\eclipse-workspace\\IPLLeagueAnalysis\\WP DP Data_01 IPL2019FactsheetMostRuns.csv";
-	
-	IPLAnalyser iplAnalyser;
-	
+
+	IPLAnalyser iplAnalyser = null;
+
 	@Before
-	void createIplAnalyserObject()
-	{
+	public void createIplAnalyserObject() {
 		iplAnalyser = new IPLAnalyser();
 	}
-	
+
 	@Test
-	public void givenCsvDataShouldReturnTopBattingAvg()
-	{
-		iplAnalyser.loadRunsData(PLAYER_RUNS_DATA);
-		double topAvg = iplAnalyser.getTopBattingAvg();
-		assertEquals(83.2, topAvg,0.0);
+	public void givenCsvDataShouldReturnTopBattingAvg() {
+		try {
+			iplAnalyser.loadRunsData(PLAYER_RUNS_DATA);
+			String playerName = iplAnalyser.getTopBattingAvg();
+			assertEquals("MS Dhoni", playerName);
+		} catch (IPLAnalyserException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
