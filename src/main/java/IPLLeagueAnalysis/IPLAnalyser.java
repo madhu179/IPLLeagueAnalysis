@@ -103,6 +103,14 @@ public class IPLAnalyser {
 		return getBowlerName();
 	}
 	
+	public String getBestStrikeRateWith4w5w() throws IPLAnalyserException {
+		checkForBowlerData();
+		bowlerComparator = Comparator.comparing(s->s.fourWickets+s.fiveWickets);
+		bowlerComparator = bowlerComparator.reversed();
+		bowlerComparator = bowlerComparator.thenComparing(Bowler::getStrikeRate);
+		return getBowlerName();
+	}
+	
 	private String getBatsmanName() {
 		this.sortBatsmenData(batsmanComparator);
         Collections.reverse(batsmanDataList);		
