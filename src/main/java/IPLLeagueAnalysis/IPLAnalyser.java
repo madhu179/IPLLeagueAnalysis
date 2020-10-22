@@ -5,7 +5,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.capgemini.csvbuilder.BuilderException;
 import com.capgemini.csvbuilder.BuilderFactory;
@@ -57,6 +56,12 @@ public class IPLAnalyser {
         return getBatsmanName();
 	}
 	
+	public String getGreatAvgwithBestStrickRate() throws IPLAnalyserException{
+		checkForData();
+		runsComparator = Comparator.comparing(PlayerRuns::getAverage).thenComparing(s->s.strikeRate);
+        return getBatsmanName();
+	}
+	
 	private String getBatsmanName() {
 		this.sortBatsmenData(runsComparator);
         Collections.reverse(playerRunsList);		
@@ -83,6 +88,5 @@ public class IPLAnalyser {
 	            }
 	        }
 	}
-	
 
 }
