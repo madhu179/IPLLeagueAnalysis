@@ -14,12 +14,30 @@ public class IPLAnalyser {
 	
 	private List<Batsman> batsmanDataList = null;
 	private Comparator<Batsman> batsmanComparator;
+	
+	private List<Bowler> bowlerDataList = null;
+	private Comparator<Bowler> bowlerComparator;
 
 	public void loadRunsData(String filePath) throws IPLAnalyserException {
 		try(Reader reader = Files.newBufferedReader(Paths.get(filePath));) {
 			
 			ICSVBuilder csvBuilderCustom = BuilderFactory.createBuilder();
 			batsmanDataList = csvBuilderCustom.getCSVFileList(reader,Batsman.class);	
+           
+		} catch (IOException e) {
+			throw new IPLAnalyserException(e.getMessage(), IPLAnalyserException.Exception.INCORRECT_FILE);
+		}catch (BuilderException e) {
+			throw new IPLAnalyserException(e.getMessage(),e.type.name());
+		}
+
+	}
+	
+	public void loadWktsData(String filePath) throws IPLAnalyserException {
+		try(Reader reader = Files.newBufferedReader(Paths.get(filePath));){
+			new BuilderFactory();
+			ICSVBuilder csvBuilderCustom = BuilderFactory.createBuilder();
+
+			bowlerDataList = csvBuilderCustom.getCSVFileList(reader,Bowler.class);	
            
 		} catch (IOException e) {
 			throw new IPLAnalyserException(e.getMessage(), IPLAnalyserException.Exception.INCORRECT_FILE);
@@ -67,6 +85,12 @@ public class IPLAnalyser {
         return getBatsmanName();
 	}
 	
+	public String getTopBowlingAvg() throws IPLAnalyserException {
+		checkForBowlerData();
+		bowlerComparator = Comparator.comparing(Bowler::getAverage);
+		return getBowlerName();
+	}
+	
 	private String getBatsmanName() {
 		this.sortBatsmenData(batsmanComparator);
         Collections.reverse(batsmanDataList);		
@@ -80,6 +104,18 @@ public class IPLAnalyser {
         }
 	}
 	
+	private String getBowlerName() {
+		this.sortBowlerData(bowlerComparator);	
+        return bowlerDataList.get(0).player;
+	}
+	
+	private void checkForBowlerData() throws IPLAnalyserException
+	{
+		if (bowlerDataList == null || bowlerDataList.size() == 0) {
+            throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
+        }
+	}
+	
 	private void sortBatsmenData(Comparator<Batsman> comparator)
 	{
 		 for (int i = 0; i < batsmanDataList.size() - 1; i++) {
@@ -89,6 +125,20 @@ public class IPLAnalyser {
 	                if (comparator.compare(census1, census2) > 0) {
 	                	batsmanDataList.set(j, census2);
 	                	batsmanDataList.set(j + 1, census1);
+	                }
+	            }
+	        }
+	}
+	
+	private void sortBowlerData(Comparator<Bowler> comparator)
+	{
+		 for (int i = 0; i < bowlerDataList.size() - 1; i++) {
+	            for (int j = 0; j < bowlerDataList.size() - i - 1; j++) {
+	            	Bowler census1 = bowlerDataList.get(j);
+	            	Bowler census2 = bowlerDataList.get(j + 1);
+	                if (comparator.compare(census1, census2) > 0) {
+	                	bowlerDataList.set(j, census2);
+	                	bowlerDataList.set(j + 1, census1);
 	                }
 	            }
 	        }
