@@ -62,6 +62,13 @@ public class IPLAnalyser {
         return getBatsmanName();
 	}
 	
+	public String getMaxRunsWithBestAvg() throws IPLAnalyserException{
+		checkForData();
+		runsComparator = Comparator.comparing(s->s.runs);
+		runsComparator = runsComparator.thenComparing(PlayerRuns::getAverage);
+        return getBatsmanName();
+	}
+	
 	private String getBatsmanName() {
 		this.sortBatsmenData(runsComparator);
         Collections.reverse(playerRunsList);		
