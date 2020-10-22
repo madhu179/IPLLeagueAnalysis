@@ -126,5 +126,16 @@ public class IPLAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenWktsCsvDataShouldReturnGreatAvgWithBestStrikeRate() {
+		try {
+			iplAnalyser.loadWktsData(PLAYER_WKTS_DATA);
+			String playerName = iplAnalyser.getGreatAvgWithBestStrikeRate();
+			assertEquals("Anukul Roy", playerName);
+		} catch (IPLAnalyserException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
