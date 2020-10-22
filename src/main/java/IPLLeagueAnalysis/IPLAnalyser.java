@@ -12,16 +12,14 @@ import com.capgemini.csvbuilder.ICSVBuilder;
 
 public class IPLAnalyser {
 	
-	private List<PlayerRuns> playerRunsList = null;
-	private Comparator<PlayerRuns> runsComparator;
+	private List<Batsman> batsmanDataList = null;
+	private Comparator<Batsman> batsmanComparator;
 
 	public void loadRunsData(String filePath) throws IPLAnalyserException {
-		try {
-			Reader reader = Files.newBufferedReader(Paths.get(filePath));
-			new BuilderFactory();
+		try(Reader reader = Files.newBufferedReader(Paths.get(filePath));) {
+			
 			ICSVBuilder csvBuilderCustom = BuilderFactory.createBuilder();
-
-			playerRunsList = csvBuilderCustom.getCSVFileList(reader,PlayerRuns.class);	
+			batsmanDataList = csvBuilderCustom.getCSVFileList(reader,Batsman.class);	
            
 		} catch (IOException e) {
 			throw new IPLAnalyserException(e.getMessage(), IPLAnalyserException.Exception.INCORRECT_FILE);
@@ -33,64 +31,64 @@ public class IPLAnalyser {
 	
 	public String getTopBattingAvg() throws IPLAnalyserException {
 		checkForData();
-		runsComparator = Comparator.comparing(PlayerRuns::getAverage);
+		batsmanComparator = Comparator.comparing(Batsman::getAverage);
 		return getBatsmanName();
 	}
 
 	public String getTopStrikeRate() throws IPLAnalyserException {
 		checkForData();
-		runsComparator = Comparator.comparing(s->s.strikeRate);
+		batsmanComparator = Comparator.comparing(s->s.strikeRate);
 		return getBatsmanName();
 	}
 
 	public String getMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
-		runsComparator = Comparator.comparing(s->s.sixes+s.fours);
+		batsmanComparator = Comparator.comparing(s->s.sixes+s.fours);
 		return getBatsmanName();
 	}
 	
 	public String getBestStrickRateMaximum6sAnd4s() throws IPLAnalyserException {
 		checkForData();
-		runsComparator = Comparator.comparing(s->s.sixes+s.fours);
-		runsComparator = runsComparator.thenComparing(s->s.strikeRate);
+		batsmanComparator = Comparator.comparing(s->s.sixes+s.fours);
+		batsmanComparator = batsmanComparator.thenComparing(s->s.strikeRate);
         return getBatsmanName();
 	}
 	
 	public String getGreatAvgwithBestStrickRate() throws IPLAnalyserException{
 		checkForData();
-		runsComparator = Comparator.comparing(PlayerRuns::getAverage).thenComparing(s->s.strikeRate);
+		batsmanComparator = Comparator.comparing(Batsman::getAverage).thenComparing(s->s.strikeRate);
         return getBatsmanName();
 	}
 	
 	public String getMaxRunsWithBestAvg() throws IPLAnalyserException{
 		checkForData();
-		runsComparator = Comparator.comparing(s->s.runs);
-		runsComparator = runsComparator.thenComparing(PlayerRuns::getAverage);
+		batsmanComparator = Comparator.comparing(s->s.runs);
+		batsmanComparator = batsmanComparator.thenComparing(Batsman::getAverage);
         return getBatsmanName();
 	}
 	
 	private String getBatsmanName() {
-		this.sortBatsmenData(runsComparator);
-        Collections.reverse(playerRunsList);		
-        return playerRunsList.get(0).player;
+		this.sortBatsmenData(batsmanComparator);
+        Collections.reverse(batsmanDataList);		
+        return batsmanDataList.get(0).player;
 	}
 	
 	private void checkForData() throws IPLAnalyserException
 	{
-		if (playerRunsList == null || playerRunsList.size() == 0) {
+		if (batsmanDataList == null || batsmanDataList.size() == 0) {
             throw new IPLAnalyserException("No Census Data",IPLAnalyserException.Exception.NO_CENSUS_DATA);
         }
 	}
 	
-	private void sortBatsmenData(Comparator<PlayerRuns> comparator)
+	private void sortBatsmenData(Comparator<Batsman> comparator)
 	{
-		 for (int i = 0; i < playerRunsList.size() - 1; i++) {
-	            for (int j = 0; j < playerRunsList.size() - i - 1; j++) {
-	            	PlayerRuns census1 = playerRunsList.get(j);
-	            	PlayerRuns census2 = playerRunsList.get(j + 1);
+		 for (int i = 0; i < batsmanDataList.size() - 1; i++) {
+	            for (int j = 0; j < batsmanDataList.size() - i - 1; j++) {
+	            	Batsman census1 = batsmanDataList.get(j);
+	            	Batsman census2 = batsmanDataList.get(j + 1);
 	                if (comparator.compare(census1, census2) > 0) {
-	                	playerRunsList.set(j, census2);
-	                	playerRunsList.set(j + 1, census1);
+	                	batsmanDataList.set(j, census2);
+	                	batsmanDataList.set(j + 1, census1);
 	                }
 	            }
 	        }

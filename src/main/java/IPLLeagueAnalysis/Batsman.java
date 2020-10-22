@@ -2,7 +2,7 @@ package IPLLeagueAnalysis;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class PlayerRuns {
+public class Batsman {
 	
 	
 	@CsvBindByName(column = "POS", required = true)
