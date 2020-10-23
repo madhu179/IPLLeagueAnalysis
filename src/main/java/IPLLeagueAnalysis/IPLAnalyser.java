@@ -173,6 +173,14 @@ public class IPLAnalyser {
 		batsmanComparator = batsmanComparator.thenComparing(Batsman::getAverage);
         return getBatsmanName();
 	}
+	
+	public String getZeroHundredsFiftiesWithBestAvg() throws IPLAnalyserException {
+		checkForData();
+		batsmanComparator = Comparator.comparing(s->s.hundreds+s.fifties);
+		batsmanComparator = batsmanComparator.reversed();
+		batsmanComparator = batsmanComparator.thenComparing(Batsman::getAverage);
+        return getBatsmanName();
+	}
 
 	private String getBatsmanName() {
 		this.sortBatsmenData(batsmanComparator);
