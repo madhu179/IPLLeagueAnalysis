@@ -126,6 +126,26 @@ public class IPLAnalyser {
 		return getBowlerName();
 	}
 	
+	public String getBestBattingAvgBestBowlingAvg() throws IPLAnalyserException {
+		checkForBowlerData();
+		batsmanComparator = Comparator.comparing(Batsman::getAverage);
+		getBatsmanName();
+		bowlerComparator = Comparator.comparing(Bowler::getAverage);
+		getBowlerName();
+		
+		for(Batsman b : batsmanDataList)
+		{
+			for(Bowler bo : bowlerDataList)
+			{
+				if(b.player.equals(bo.player))
+				{
+					return b.player;
+				}
+			}
+		}
+		return null;
+	}
+
 	private String getBatsmanName() {
 		this.sortBatsmenData(batsmanComparator);
         Collections.reverse(batsmanDataList);		
