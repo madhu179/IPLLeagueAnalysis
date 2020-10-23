@@ -160,5 +160,17 @@ public class IPLAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenWktsCsvDataShouldReturnBestAllRounder() {
+		try {
+			iplAnalyser.loadRunsData(PLAYER_RUNS_DATA);
+			iplAnalyser.loadWktsData(PLAYER_WKTS_DATA);
+			String playerName = iplAnalyser.getBestAllRounder();
+			assertEquals("Andre Russell", playerName);
+		} catch (IPLAnalyserException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
