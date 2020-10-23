@@ -174,7 +174,7 @@ public class IPLAnalyserTest {
 	}
 	
 	@Test
-	public void givenrunsCsvDataShouldReturnBestAllRounder() {
+	public void givenrunsCsvDataShouldReturnMaxHundredsWithBestAvg() {
 		try {
 			iplAnalyser.loadRunsData(PLAYER_RUNS_DATA);
 			String playerName = iplAnalyser.getMaxHundredsWithBestAvg();
@@ -183,5 +183,7 @@ public class IPLAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 }
