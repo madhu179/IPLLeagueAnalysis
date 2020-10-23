@@ -145,6 +145,27 @@ public class IPLAnalyser {
 		}
 		return null;
 	}
+	
+	public String getBestAllRounder() throws IPLAnalyserException {
+		checkForBowlerData();
+		batsmanComparator = Comparator.comparing(s->s.runs);
+		getBatsmanName();
+		bowlerComparator = Comparator.comparing(s->s.wickets);
+		bowlerComparator = bowlerComparator.reversed();
+		getBowlerName();
+		
+		for(Batsman b : batsmanDataList)
+		{
+			for(Bowler bo : bowlerDataList)
+			{
+				if(b.player.equals(bo.player))
+				{
+					return b.player;
+				}
+			}
+		}
+		return null;
+	}
 
 	private String getBatsmanName() {
 		this.sortBatsmenData(batsmanComparator);
